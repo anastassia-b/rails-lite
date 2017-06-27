@@ -2,6 +2,7 @@ require 'active_support'
 require 'active_support/core_ext'
 require 'erb'
 require_relative './session'
+require_reltaive './flash'
 
 class ControllerBase
   attr_reader :req, :res, :params
@@ -28,6 +29,9 @@ class ControllerBase
     @already_built_response = true
 
     session.store_session(@res)
+    flash.store_flash(@res)
+
+    nil
   end
 
   # Populate the response with content.
@@ -41,6 +45,9 @@ class ControllerBase
     @already_built_response = true
 
     session.store_session(@res)
+    flash.store_flash(@res)
+
+    nil
   end
 
   # use ERB and binding to evaluate templates
@@ -70,5 +77,9 @@ class ControllerBase
     render(name) unless already_built_response?
 
     nil
+  end
+
+  def flash
+    @flash ||= Flash.new(@req)
   end
 end
